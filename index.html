@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>APQ Stage 2 & 3 Guide</title>
+<title>Amoria Party Quest</title>
 <link rel="icon" type="image/x-icon" href="favicon.ico">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
@@ -558,15 +558,233 @@
     color: var(--muted);
     letter-spacing: 0.04em;
   }
+  /* ─────────────────────────────────────────
+     SUMMARY PAGE STYLES
+  ───────────────────────────────────────── */
+
+  .summary-container {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 32px 20px 60px;
+  }
+
+  .summary-title {
+    text-align: center;
+    margin-bottom: 36px;
+  }
+
+  .summary-title h1 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent-stage);
+    margin-bottom: 4px;
+  }
+
+  .summary-title p {
+    font-size: 0.75rem;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.05em;
+  }
+
+  .stage-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+
+  .stage-card-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 20px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.2s;
+  }
+
+  .stage-card-header:hover {
+    background: rgba(255,255,255,0.02);
+  }
+
+  .stage-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--bg);
+    background: var(--accent-stage);
+    border-radius: 6px;
+    padding: 3px 8px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .stage-card:nth-child(2) .stage-num { background: #818cf8; }
+  .stage-card:nth-child(3) .stage-num { background: #34d399; color: #0f1117; }
+  .stage-card:nth-child(4) .stage-num { background: #f472b6; color: #0f1117; }
+  .stage-card:nth-child(5) .stage-num { background: #fb923c; color: #0f1117; }
+  .stage-card:nth-child(6) .stage-num { background: #e879f9; color: #0f1117; }
+  .stage-card:nth-child(7) .stage-num { background: #f87171; color: #0f1117; }
+  .stage-card:nth-child(8) .stage-num { background: var(--gold); color: #0f1117; }
+
+  .stage-card-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.02em;
+    flex: 1;
+  }
+
+  .stage-card-chevron {
+    font-size: 0.7rem;
+    color: var(--muted);
+    transition: transform 0.25s ease;
+    flex-shrink: 0;
+  }
+
+  .stage-card.open .stage-card-chevron {
+    transform: rotate(180deg);
+  }
+
+  .stage-card-body {
+    display: none;
+    padding: 0 20px 20px;
+    border-top: 1px solid var(--border);
+  }
+
+  .stage-card.open .stage-card-body {
+    display: block;
+  }
+
+  /* NPC sprite row */
+  .npc-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin: 16px 0 12px;
+    align-items: flex-end;
+  }
+
+  .npc-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .npc-item img {
+    height: 52px;
+    width: auto;
+    image-rendering: pixelated;
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4));
+  }
+
+  .npc-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+
+  /* Step list */
+  .step-list {
+    list-style: none;
+    padding: 0;
+    margin: 12px 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .step-list li {
+    display: flex;
+    gap: 12px;
+    font-size: 0.82rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .step-list li strong {
+    color: var(--text);
+  }
+
+  .step-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: var(--accent-stage);
+    background: rgba(96,165,250,0.1);
+    border: 1px solid rgba(96,165,250,0.2);
+    border-radius: 4px;
+    padding: 2px 6px;
+    height: fit-content;
+    margin-top: 2px;
+    flex-shrink: 0;
+    min-width: 24px;
+    text-align: center;
+  }
+
+  .tip-box {
+    margin-top: 14px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    background: rgba(251,191,36,0.06);
+    border: 1px solid rgba(251,191,36,0.2);
+    font-size: 0.78rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .tip-box strong {
+    color: var(--gold);
+  }
+
+  .warn-box {
+    margin-top: 14px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    background: rgba(248,113,113,0.06);
+    border: 1px solid rgba(248,113,113,0.2);
+    font-size: 0.78rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .warn-box strong {
+    color: var(--accent-diff);
+  }
+
+  .info-box {
+    margin-top: 14px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    background: rgba(96,165,250,0.06);
+    border: 1px solid rgba(96,165,250,0.2);
+    font-size: 0.78rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .info-box strong {
+    color: var(--accent-stage);
+  }
 </style>
 </head>
 <body>
 
 <!-- ── Navbar ── -->
 <nav class="navbar">
-  <div class="nav-title">APQ · Sealed Room</div>
+  <div class="nav-title">Amoria Party Quest</div>
   <div class="nav-tabs">
-    <button class="nav-tab active" onclick="switchTab('s2', this)">Stage 2</button>
+    <button class="nav-tab active" onclick="switchTab('summary', this)">Guide</button>
+    <button class="nav-tab" onclick="switchTab('s2', this)">Stage 2</button>
     <button class="nav-tab" onclick="switchTab('s3', this)">Stage 3</button>
   </div>
 </nav>
@@ -574,7 +792,7 @@
 <!-- ══════════════════════════════════════
      STAGE 2 PANEL
 ══════════════════════════════════════ -->
-<div class="panel active" id="panel-s2">
+<div class="panel" id="panel-s2">
   <div class="container">
 
     <div class="s2-header">
@@ -592,7 +810,7 @@
     </div>
 
     <div class="combo-display">
-      <div class="stage-label" id="stageLabel">Stage 1 — Try this combination</div>
+      <div class="stage-label" id="stageLabel">Stage 1: Try this combination</div>
       <div class="combo-badge animate-in" id="comboBadge">5-0-0</div>
     </div>
 
@@ -626,7 +844,7 @@
 
     <div class="s3-header">
       <h1>Slime Counter</h1>
-      <p>APQ Stage 3 — Platform Solver</p>
+      <p>APQ Stage 3: Platform Solver</p>
     </div>
 
     <p class="hint">Type slime counts as the bottom person moves <span>C → 6 → D → 9 → 5</span></p>
@@ -648,6 +866,193 @@
   </div>
 </div>
 
+<!-- ══════════════════════════════════════
+     SUMMARY / GUIDE PANEL
+══════════════════════════════════════ -->
+<div class="panel active" id="panel-summary">
+  <div class="summary-container">
+
+    <div class="summary-title">
+      <h1>APQ Guide</h1>
+      <p>Amorian Challenge / GMS Reference</p>
+    </div>
+
+    <!-- ENTRY -->
+    <div class="stage-card" id="sc0">
+      <div class="stage-card-header" onclick="toggleCard('sc0')">
+        <span class="stage-num" style="background:#475569;color:#e2e8f8">Entry</span>
+        <span class="stage-card-title">Getting In</span>
+        <span class="stage-card-chevron">▼</span>
+      </div>
+      <div class="stage-card-body">
+        <ul class="step-list">
+          <li><span class="step-num">1</span><span>Farm <strong>10 Lip Lock Keys</strong> from <strong>Indigo Eyes</strong> and <strong>Crystal Boars</strong> near Amos' Training Ground (a few maps right of New Wedding Hall).</span></li>
+          <li><span class="step-num">2</span><span>Turn them in to <strong>Amos the Strong</strong> to receive an <strong>Entrance Ticket</strong>. You can get a new ticket every <strong>6 hours</strong>.</span></li>
+          <li><span class="step-num">3</span><span>All 6 party members use their tickets to enter the pre-entry map. Once everyone is present, the <strong>leader talks to Amos</strong> to start.</span></li>
+        </ul>
+        <div class="warn-box"><strong>⚠ Party of exactly 6 required.</strong> If anyone leaves or disconnects mid-run, the PQ cannot be completed. Both male and female characters are required, but an equal split is not.</div>
+      </div>
+    </div>
+
+    <!-- STAGE 1 -->
+    <div class="stage-card" id="sc1">
+      <div class="stage-card-header" onclick="toggleCard('sc1')">
+        <span class="stage-num">Stage 1</span>
+        <span class="stage-card-title">Magik Mirror: The Fierry</span>
+        <span class="stage-card-chevron">▼</span>
+      </div>
+      <div class="stage-card-body">
+        <div class="npc-row">
+          <div class="npc-item"><img src="resources/amos.png" alt="Amos"><span class="npc-label">Amos</span></div>
+          <div class="npc-item"><img src="resources/glimmerman.png" alt="Glimmerman"><span class="npc-label">Glimmer Man</span></div>
+          <div class="npc-item"><img src="resources/fierry.png" alt="Magik Fierry"><span class="npc-label">Magik Fierry B</span></div>
+          <div class="npc-item"><img src="resources/hammer.png" alt="Wing Hammer"><span class="npc-label">Wing Hammer</span></div>
+        </div>
+        <ul class="step-list">
+          <li><span class="step-num">1</span><span>The <strong>leader talks to Amos</strong> to spawn 3 portals. The correct portal is random, pick one until you land in the middle area of the map.</span></li>
+          <li><span class="step-num">2</span><span><strong>Someone else</strong> (not the leader) talks to Amos to <strong>shuffle the portals</strong>. The leader holds <strong>↑ up</strong> so they enter the moment one activates.</span></li>
+          <li><span class="step-num">3</span><span>Signs in the middle direct <strong>male characters right</strong> (Crystal Boars + Magik Fiarry As) and <strong>female characters left</strong> (Indigo Eyes + Magik Fiarry As). <strong>Kill all monsters</strong> on both sides.</span></li>
+          <li><span class="step-num">4</span><span>The leader races to the bottom and talks to <strong>The Glimmer Man</strong> before mobs fully spawn. If fast enough, <strong>Magik Fierry B spawns immediately.</strong> Otherwise you wait for all mobs to die first.</span></li>
+          <li><span class="step-num">5</span><span>The Fierry flies around the map, someone kills it to drop the <strong>Wing Hammer</strong>.</span></li>
+          <li><span class="step-num">6</span><span>Whoever picks it up <strong>drops the Wing Hammer on the Magik Mirror</strong> above the center of the map to shatter it, producing a <strong>Magik Mirror Shard</strong>.</span></li>
+          <li><span class="step-num">7</span><span>The <strong>leader delivers the Shard to Glimmer Man</strong> to clear. Everyone talks to Amos to proceed.</span></li>
+        </ul>
+        <div class="tip-box"><strong>💡 Tip:</strong> The leader getting to Glimmer Man fast skips the mob-clear wait and spawns the Fierry immediately. This is the biggest time saver in Stage 1.</div>
+      </div>
+    </div>
+
+    <!-- STAGE 2 -->
+    <div class="stage-card" id="sc2">
+      <div class="stage-card-header" onclick="toggleCard('sc2')">
+        <span class="stage-num">Stage 2</span>
+        <span class="stage-card-title">Heart Strings: The Sealed Room</span>
+        <span class="stage-card-chevron">▼</span>
+      </div>
+      <div class="stage-card-body">
+        <ul class="step-list">
+          <li><span class="step-num">1</span><span>Three ropes hang from a <strong>Sun, Star, and Moon</strong>. The correct number of people on each rope must match the hidden combination, <strong>5 people total</strong> across the three ropes.</span></li>
+          <li><span class="step-num">2</span><span>Use the portals at the bottom to reach the ropes (press ↑, then jump and hold ↑ to cling). The stage layout changes based on <strong>server time</strong> (day / evening / night) but the mechanic is the same.</span></li>
+          <li><span class="step-num">3</span><span>The leader gets <strong>7 attempts</strong> and receives a clue after each: how many ropes have the correct count. If all 7 are used, monsters spawn and the combo resets.</span></li>
+          <li><span class="step-num">4</span><span>Strategy: <strong>start all 5 on the left rope</strong> (5-0-0), then shift people one at a time, calling out the new distribution (e.g. "410", "320") until you find the right combo.</span></li>
+        </ul>
+        <div class="info-box"><strong>→ Use the Stage 2 tab</strong> for the interactive decision tree that walks you through every Same/Different result to the answer.</div>
+        <div class="tip-box"><strong>💡 Tip:</strong> Some paths have only one valid next step, the tool shows a "Next" button automatically for those.</div>
+      </div>
+    </div>
+
+    <!-- STAGE 3 -->
+    <div class="stage-card" id="sc3">
+      <div class="stage-card-header" onclick="toggleCard('sc3')">
+        <span class="stage-num">Stage 3</span>
+        <span class="stage-card-title">Twisted Switcher: Platform Puzzle</span>
+        <span class="stage-card-chevron">▼</span>
+      </div>
+      <div class="stage-card-body">
+        <ul class="step-list">
+          <li><span class="step-num">1</span><span>9 platforms total: <strong>4 top</strong> (A, 2, B, 3) and <strong>5 bottom</strong> (C, 6, D, 9, 5). The correct combination uses <strong>5 of these 9</strong>.</span></li>
+          <li><span class="step-num">2</span><span>Start at <strong>A2B3C</strong>: 4 people on the top, 1 on the bottom. The leader clicks Amos to trigger a guess.</span></li>
+          <li><span class="step-num">3</span><span>Each wrong guess spawns <strong>Crystal Boars</strong> (knock people off platforms, not present in GMS) and <strong>Slimes</strong>. <strong>Count the slimes</strong>. That number equals how many platforms are currently correct.</span></li>
+          <li><span class="step-num">4</span><span>The bottom person moves one platform right after each count: <strong>C → 6 → D → 9 → 5</strong>. The leader calls out the running tally (e.g. "3", "32", "323"…).</span></li>
+          <li><span class="step-num">5</span><span>Once the pattern is identified, move the party to the correct bottom platforms. Then brute-force the top using the <strong>KPQ method</strong>: try A2, AB, A3, 2B, 23, B3 until it clears.</span></li>
+        </ul>
+        <div class="info-box"><strong>→ Use the Stage 3 tab</strong> for the interactive slime counter. Type in counts as they're called out and it identifies the pattern automatically.</div>
+        <div class="tip-box"><strong>💡 Courtesy:</strong> Put a teleport class on the bottom since they move the most. Don't AFK.</div>
+        <div class="warn-box"><strong>⚠ Do NOT kill slimes</strong> until the full count is confirmed. Killing early miscounts and wastes an attempt.</div>
+      </div>
+    </div>
+
+    <!-- STAGE 4 -->
+    <div class="stage-card" id="sc4">
+      <div class="stage-card-header" onclick="toggleCard('sc4')">
+        <span class="stage-num">Stage 4</span>
+        <span class="stage-card-title">Last Man Standing: Code Pieces</span>
+        <span class="stage-card-chevron">▼</span>
+      </div>
+      <div class="stage-card-body">
+        <div class="npc-row">
+          <div class="npc-item"><img src="resources/codepieces.png" alt="Code Pieces"><span class="npc-label">Cupid Code Piece</span></div>
+        </div>
+        <ul class="step-list">
+          <li><span class="step-num">1</span><span>Kill the mobs to drop <strong>Cupid Code Pieces</strong>. Need <strong>50 total</strong>.</span></li>
+          <li><span class="step-num">2</span><span>Takes roughly <strong>1 minute</strong> for 50 to drop if all mobs are killed every spawn.</span></li>
+          <li><span class="step-num">3</span><span>The <strong>leader needs to reach 50 pieces</strong>, so don't loot the pieces yourself. It just slows things down.</span></li>
+        </ul>
+        <div class="warn-box"><strong>⚠ Don't loot the code pieces</strong> unless you're the leader. It doesn't break anything but it slows the leader down.</div>
+      </div>
+    </div>
+
+    <!-- STAGE 5 -->
+    <div class="stage-card" id="sc5">
+      <div class="stage-card-header" onclick="toggleCard('sc5')">
+        <span class="stage-num">Stage 5</span>
+        <span class="stage-card-title">Fluttering Hearts: The Gates</span>
+        <span class="stage-card-chevron">▼</span>
+      </div>
+      <div class="stage-card-body">
+        <ul class="step-list">
+          <li><span class="step-num">1</span><span>The <strong>entire party</strong> runs right across the map. You'll be swarmed by various mobs and lava columns that deal little damage and can mostly be ignored.</span></li>
+          <li><span class="step-num">2</span><span>Not far behind is a swarm of <strong>Rombots dealing 10,000 damage per hit.</strong> Keep moving and don't fall behind.</span></li>
+          <li><span class="step-num">3</span><span>While running, <strong>destroy the Gates with normal attacks</strong>. At the very end, jump onto the elevated platform to reach Amos.</span></li>
+          <li><span class="step-num">4</span><span>Once the <strong>entire party</strong> arrives, talk to Amos to clear.</span></li>
+        </ul>
+        <div class="warn-box"><strong>⚠ Use normal attacks on gates.</strong> Skills like Hurricane or high-damage AoE may not register on the gates. Switch to a basic attack if a gate isn't opening.</div>
+      </div>
+    </div>
+
+    <!-- STAGE 6 -->
+    <div class="stage-card" id="sc6">
+      <div class="stage-card-header" onclick="toggleCard('sc6')">
+        <span class="stage-num">Stage 6</span>
+        <span class="stage-card-title">Love Hurts: Geist Balrog</span>
+        <span class="stage-card-chevron">▼</span>
+      </div>
+      <div class="stage-card-body">
+        <div class="npc-row">
+          <div class="npc-item"><img src="resources/geist.png" alt="Geist Fang"><span class="npc-label">Geist Fang</span></div>
+          <div class="npc-item"><img src="resources/amos.png" alt="Amos"><span class="npc-label">Amos</span></div>
+        </div>
+        <ul class="step-list">
+          <li><span class="step-num">1</span><span>Party starts top-left. <strong>Amos requires the full party present</strong> before beginning, so wait for everyone.</span></li>
+          <li><span class="step-num">2</span><span>Fight <strong>Geist Balrog</strong> across 3 phases: Jr. Balrog, then Crimson Balrog, then Geist Balrog.</span></li>
+          <li><span class="step-num">3</span><span>Pick up the <strong>Geist Fang</strong> that drops. The <strong>leader delivers it to Amos</strong> to clear the stage.</span></li>
+        </ul>
+        <div class="info-box">
+          <strong>After Stage 6, depends on party composition:</strong><br><br>
+          <strong>Not 3♂/3♀ split:</strong> Sent directly to the <strong>normal Bonus Stage</strong>. Turn off pet auto-loot now.<br><br>
+          <strong>3♂/3♀ split:</strong> Sent to the <strong>Couples Bonus Room</strong>. If all 3 pairs are in-game married couples, an extra challenge is available for a Legendary Elias Cape / Cecelia Cloak, but these are outdated and not worth it for most parties. If you're not 3 married couples, Amos sends you to the normal bonus stage anyway.
+        </div>
+        <div class="tip-box"><strong>💡 Tip:</strong> Turn off pet auto-loot before Stage 6 ends so you're in control of what you pick up in the bonus stage.</div>
+      </div>
+    </div>
+
+    <!-- BONUS STAGE -->
+    <div class="stage-card" id="sc7">
+      <div class="stage-card-header" onclick="toggleCard('sc7')">
+        <span class="stage-num">Bonus</span>
+        <span class="stage-card-title">Amos' Vault: Apple Frenzy</span>
+        <span class="stage-card-chevron">▼</span>
+      </div>
+      <div class="stage-card-body">
+        <div class="npc-row">
+          <div class="npc-item"><img src="resources/apple.png" alt="Onyx Apple"><span class="npc-label">Onyx Apple</span></div>
+          <div class="npc-item"><img src="resources/chew.png" alt="Crystalized Pineapple Chew"><span class="npc-label">Pine Chew</span></div>
+        </div>
+        <ul class="step-list">
+          <li><span class="step-num">1</span><span>You have <strong>60 seconds</strong> to hit as many boxes as possible with various skills.</span></li>
+          <li><span class="step-num">2</span><span>Collect what drops. <strong>Onyx Apples</strong> are the main prize. Other drops include Crystalized Pineapple Chews, Cecelia's Earrings, Moonstar Earrings, Celestial Earrings, Amorian Rice Cookies, and Amorian Relaxers.</span></li>
+        </ul>
+        <div class="info-box">
+          <strong>Crystalized Pineapple Chews</strong> grant a <strong>+20 attack buff lasting 7 minutes</strong>. Stackability TBC, grab them regardless.<br><br>
+          <strong>Onyx Apples</strong> are the most valuable drop.
+        </div>
+        <div class="warn-box"><strong>⚠ Turn off pet auto-loot</strong> and <strong>do not steal apples from other people.</strong> Only loot what drops near you. Apples are the whole point of the run for most people.</div>
+        <div class="tip-box"><strong>💡 Tip:</strong> Spread out and use AoE / multi-hit skills to break boxes quickly. 60 seconds goes fast.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
 <script>
 // ══════════════════════════════════════
 // TAB SWITCHING
@@ -660,6 +1065,14 @@ function switchTab(id, btn) {
   if (id === 's3') {
     setTimeout(() => document.getElementById(`inp-${BOTTOM_PLATS[0]}`)?.focus(), 80);
   }
+}
+
+// ══════════════════════════════════════
+// SUMMARY ACCORDION
+// ══════════════════════════════════════
+function toggleCard(id) {
+  const card = document.getElementById(id);
+  card.classList.toggle('open');
 }
 
 // ══════════════════════════════════════
@@ -785,7 +1198,7 @@ function s2advance(next) {
   if (isTerminal(s2current)) { s2showTerminal(); return; }
   animateBadge(s2current, false);
   document.getElementById('stageLabel').textContent =
-    `${stageNames[s2step] || 'Stage ' + (s2step + 1)} — Try this combination`;
+    `${stageNames[s2step] || 'Stage ' + (s2step + 1)}: Try this combination`;
   s2renderQuestionCard();
 }
 
@@ -804,7 +1217,7 @@ function s2showDeadEnd(choice) {
   document.getElementById('terminalCard').classList.add('hidden');
   document.getElementById('deadCard').classList.remove('hidden');
   document.getElementById('deadDesc').textContent =
-    `No path exists from ${s2current} going "${choice}". This route isn't in the guide — try retracing your steps.`;
+    `No path exists from ${s2current} going "${choice}". This route isn't in the guide. Try retracing your steps.`;
   s2renderHistory();
 }
 
@@ -816,7 +1229,7 @@ function s2reset() {
     const dot = document.getElementById(`dot-${i}`);
     if (dot) { dot.className = 'progress-dot'; if (i === 0) dot.classList.add('active'); }
   }
-  document.getElementById('stageLabel').textContent = 'Stage 1 — Try this combination';
+  document.getElementById('stageLabel').textContent = 'Stage 1: Try this combination';
   document.getElementById('history').innerHTML = '';
   document.getElementById('terminalCard').classList.add('hidden');
   document.getElementById('deadCard').classList.add('hidden');
@@ -1038,10 +1451,10 @@ function s3update() {
   // For all-bot, no top platforms needed — don't highlight any
   if (allBot) {
     ra.innerHTML = `<div class="result-card success">
-      <div class="result-title">✓ All Bottom Correct${earlyDeduced ? ' — Early Solve' : ''}</div>
+      <div class="result-title">✓ All Bottom Correct${earlyDeduced ? ' (early solve)' : ''}</div>
       <div class="result-move">Move to: <span class="green">C 6 D 9 5</span></div>
       <div class="result-detail">
-        Pattern: <strong>11111</strong> — all bottom platforms are correct. No top platform changes needed. Stage clear!
+        Pattern: <strong>11111</strong> All bottom platforms are correct. No top platform changes needed. Stage clear!
       </div>
     </div>`;
     return;
@@ -1051,10 +1464,10 @@ function s3update() {
     TOP_PLATS.forEach(name => document.getElementById(`top-${name}`)?.classList.add('highlighted'));
     BOTTOM_PLATS.slice(0,1).forEach(name => document.getElementById(`bot-${name}`)?.classList.add('highlighted')); // C
     ra.innerHTML = `<div class="result-card success">
-      <div class="result-title">✓ Instant Pass${earlyDeduced ? ' — Early Solve' : ''}</div>
+      <div class="result-title">✓ Instant Pass${earlyDeduced ? ' (early solve)' : ''}</div>
       <div class="result-move">Answer: <span class="green">A 2 B 3 C</span></div>
       <div class="result-detail">
-        Pattern: <strong>44445</strong> — all 4 top platforms are correct and you're already on the starting position. The stage clears as soon as the bottom person stands on any platform (you see a 5). No moves needed!
+        Pattern: <strong>44445</strong> All 4 top platforms are correct and you're already on the starting position. The stage clears as soon as the bottom person stands on any platform (you see a 5). No moves needed!
       </div>
     </div>`;
     return;
@@ -1063,10 +1476,10 @@ function s3update() {
   const comboHTML = topCombos.map(c => `<span class="combo-chip">${c}</span>`).join('');
 
   ra.innerHTML = `<div class="result-card success">
-    <div class="result-title">✓ Solution Found${earlyDeduced ? ' — Early Solve' : ''}</div>
+    <div class="result-title">✓ Solution Found${earlyDeduced ? ' (early solve)' : ''}</div>
     <div class="result-move">Move to: <span class="green">${correctBottom.length > 0 ? correctBottom.join('') : '—'}</span></div>
     <div class="result-detail">
-      Pattern: <strong>${result.pattern.label}</strong> — <strong>${T} top</strong> platform${T !== 1 ? 's' : ''} correct,
+      Pattern: <strong>${result.pattern.label}</strong>, <strong>${T} top</strong> platform${T !== 1 ? 's' : ''} correct,
       <strong>${correctBottom.length}</strong> bottom platform${correctBottom.length !== 1 ? 's' : ''} correct
       (${correctBottom.length > 0 ? correctBottom.join(', ') : 'none'}).
       <br><br>
