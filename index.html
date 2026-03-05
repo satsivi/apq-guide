@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<link rel="icon" type="image/x-icon" href="favicon.ico">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>APQ Sealed Room Guide</title>
+<title>APQ Stage 2 & 3 Guide</title>
+<link rel="icon" type="image/x-icon" href="favicon.ico">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -21,6 +21,10 @@
     --glow-same: rgba(74, 222, 128, 0.15);
     --glow-diff: rgba(248, 113, 113, 0.15);
     --gold: #fbbf24;
+    --green: #4ade80;
+    --green-bg: rgba(74, 222, 128, 0.18);
+    --green-border: rgba(74, 222, 128, 0.5);
+    --red: #f87171;
   }
 
   body {
@@ -31,7 +35,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 40px 20px 60px;
+    padding: 0 0 60px;
   }
 
   body::before {
@@ -46,19 +50,87 @@
     z-index: 0;
   }
 
-  .container {
-    position: relative;
-    z-index: 1;
+  /* ── Navbar ── */
+  .navbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
     width: 100%;
-    max-width: 520px;
+    background: rgba(15, 17, 23, 0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 14px 20px 0;
   }
 
-  header {
+  .nav-title {
+    font-size: 0.72rem;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+
+  .nav-tabs {
+    display: flex;
+    gap: 4px;
+  }
+
+  .nav-tab {
+    padding: 8px 24px 10px;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+    position: relative;
+    top: 1px;
+  }
+
+  .nav-tab:hover { color: var(--text); }
+
+  .nav-tab.active {
+    color: var(--accent-stage);
+    border-bottom-color: var(--accent-stage);
+  }
+
+  /* ── Panels ── */
+  .panel {
+    display: none;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+  }
+
+  .panel.active { display: block; }
+
+  /* ── Shared container ── */
+  .container {
+    width: 100%;
+    max-width: 520px;
+    margin: 0 auto;
+    padding: 36px 20px 0;
+  }
+
+  /* ─────────────────────────────────────────
+     STAGE 2 STYLES
+  ───────────────────────────────────────── */
+
+  .s2-header {
     text-align: center;
     margin-bottom: 36px;
   }
 
-  header h1 {
+  .s2-header h1 {
     font-size: 1.15rem;
     font-weight: 700;
     letter-spacing: 0.12em;
@@ -67,7 +139,7 @@
     margin-bottom: 4px;
   }
 
-  header p {
+  .s2-header p {
     font-size: 0.78rem;
     color: var(--muted);
     letter-spacing: 0.05em;
@@ -227,28 +299,13 @@
   }
 
   .btn-same { border-color: rgba(74,222,128,0.3); color: var(--accent-same); }
-  .btn-same:hover {
-    background: var(--glow-same);
-    border-color: var(--accent-same);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(74,222,128,0.15);
-  }
+  .btn-same:hover { background: var(--glow-same); border-color: var(--accent-same); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(74,222,128,0.15); }
 
   .btn-diff { border-color: rgba(248,113,113,0.3); color: var(--accent-diff); }
-  .btn-diff:hover {
-    background: var(--glow-diff);
-    border-color: var(--accent-diff);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(248,113,113,0.15);
-  }
+  .btn-diff:hover { background: var(--glow-diff); border-color: var(--accent-diff); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(248,113,113,0.15); }
 
   .btn-next { border-color: rgba(251,191,36,0.3); color: var(--gold); }
-  .btn-next:hover {
-    background: rgba(251,191,36,0.08);
-    border-color: var(--gold);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(251,191,36,0.12);
-  }
+  .btn-next:hover { background: rgba(251,191,36,0.08); border-color: var(--gold); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(251,191,36,0.12); }
 
   .btn:active { transform: translateY(0); }
 
@@ -268,15 +325,8 @@
     text-align: center;
   }
 
-  .info-card.terminal {
-    background: var(--surface);
-    border: 1px solid rgba(74,222,128,0.25);
-  }
-
-  .info-card.dead {
-    background: var(--surface);
-    border: 1px solid rgba(248,113,113,0.25);
-  }
+  .info-card.terminal { background: var(--surface); border: 1px solid rgba(74,222,128,0.25); }
+  .info-card.dead     { background: var(--surface); border: 1px solid rgba(248,113,113,0.25); }
 
   .info-label {
     font-family: 'JetBrains Mono', monospace;
@@ -289,11 +339,7 @@
   .info-card.terminal .info-label { color: var(--accent-same); }
   .info-card.dead .info-label     { color: var(--accent-diff); }
 
-  .info-desc {
-    font-size: 0.82rem;
-    color: var(--muted);
-    line-height: 1.6;
-  }
+  .info-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.6; }
 
   .btn-reset {
     width: 100%;
@@ -311,61 +357,292 @@
     transition: all 0.2s ease;
   }
 
-  .btn-reset:hover {
-    border-color: var(--accent-stage);
-    color: var(--accent-stage);
-    background: rgba(96,165,250,0.05);
-  }
+  .btn-reset:hover { border-color: var(--accent-stage); color: var(--accent-stage); background: rgba(96,165,250,0.05); }
 
   .hidden { display: none; }
+
+  /* ─────────────────────────────────────────
+     STAGE 3 STYLES
+  ───────────────────────────────────────── */
+
+  .s3-header {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .s3-header h1 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent-stage);
+    margin-bottom: 4px;
+  }
+
+  .s3-header p {
+    font-size: 0.78rem;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .hint {
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--muted);
+    margin-bottom: 20px;
+    letter-spacing: 0.04em;
+  }
+
+  .hint span { color: var(--accent-stage); }
+
+  .platform-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+
+  .plat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .plat-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+    transition: color 0.3s;
+  }
+
+  .plat.highlighted .plat-name { color: var(--green); }
+
+  .plat-box {
+    width: 76px;
+    height: 54px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .plat.highlighted .plat-box {
+    border-color: var(--green-border);
+    background: var(--green-bg);
+    box-shadow: 0 0 16px rgba(74, 222, 128, 0.12);
+  }
+
+  .plat-input {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text);
+    caret-color: var(--accent-stage);
+  }
+
+  .plat-input:focus { color: var(--gold); }
+  .plat-input::placeholder { color: var(--border); font-size: 1.1rem; }
+
+  .plat-box.input-active {
+    border-color: rgba(96, 165, 250, 0.6);
+    box-shadow: 0 0 14px rgba(96, 165, 250, 0.12);
+  }
+
+  .section-divider {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 4px 0 16px;
+    gap: 3px;
+  }
+
+  .divider-line { width: 1px; height: 20px; background: var(--border); }
+
+  .divider-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .result-area { margin-top: 24px; min-height: 60px; }
+
+  .result-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px 24px;
+    animation: fadeUp 0.3s ease forwards;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .result-card.success { border-color: var(--green-border); background: rgba(74, 222, 128, 0.05); }
+  .result-card.partial { border-color: rgba(251, 191, 36, 0.3); background: rgba(251, 191, 36, 0.04); }
+
+  .result-title {
+    font-size: 0.65rem;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .result-card.success .result-title { color: var(--green); }
+  .result-card.partial .result-title  { color: var(--gold); }
+
+  .result-move {
+    font-size: 1.5rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 8px;
+    letter-spacing: 0.06em;
+  }
+
+  .result-move span.green  { color: var(--green); }
+
+  .result-detail { font-size: 0.78rem; color: var(--muted); line-height: 1.6; }
+  .result-detail strong { color: var(--text); }
+
+  .top-combos { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px; }
+
+  .combo-chip {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--muted);
+    letter-spacing: 0.04em;
+  }
 </style>
 </head>
 <body>
-<div class="container">
-  <header>
-    <h1>APQ Stage 2</h1>
-    <p>Decision Guide</p>
-  </header>
 
-  <div class="progress-track" id="progressTrack">
-    <div class="progress-dot active" id="dot-0"></div>
-    <div class="progress-dot" id="dot-1"></div>
-    <div class="progress-dot" id="dot-2"></div>
-    <div class="progress-dot" id="dot-3"></div>
-    <div class="progress-dot" id="dot-4"></div>
-    <div class="progress-dot" id="dot-5"></div>
+<!-- ── Navbar ── -->
+<nav class="navbar">
+  <div class="nav-title">APQ · Sealed Room</div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="switchTab('s2', this)">Stage 2</button>
+    <button class="nav-tab" onclick="switchTab('s3', this)">Stage 3</button>
   </div>
+</nav>
 
-  <div class="combo-display">
-    <div class="stage-label" id="stageLabel">Stage 1 — Try this combination</div>
-    <div class="combo-badge animate-in" id="comboBadge">5-0-0</div>
+<!-- ══════════════════════════════════════
+     STAGE 2 PANEL
+══════════════════════════════════════ -->
+<div class="panel active" id="panel-s2">
+  <div class="container">
+
+    <div class="s2-header">
+      <h1>APQ Stage 2</h1>
+      <p>Decision Guide</p>
+    </div>
+
+    <div class="progress-track" id="progressTrack">
+      <div class="progress-dot active" id="dot-0"></div>
+      <div class="progress-dot" id="dot-1"></div>
+      <div class="progress-dot" id="dot-2"></div>
+      <div class="progress-dot" id="dot-3"></div>
+      <div class="progress-dot" id="dot-4"></div>
+      <div class="progress-dot" id="dot-5"></div>
+    </div>
+
+    <div class="combo-display">
+      <div class="stage-label" id="stageLabel">Stage 1 — Try this combination</div>
+      <div class="combo-badge animate-in" id="comboBadge">5-0-0</div>
+    </div>
+
+    <div class="history" id="history"></div>
+
+    <div class="question-card" id="questionCard">
+      <div class="question-text" id="questionText"></div>
+      <div class="btn-row" id="btnRow"></div>
+    </div>
+
+    <div class="info-card terminal hidden" id="terminalCard">
+      <div class="info-label">✓ Final Answer</div>
+      <div class="info-desc" id="terminalDesc"></div>
+    </div>
+
+    <div class="info-card dead hidden" id="deadCard">
+      <div class="info-label">✕ Dead End</div>
+      <div class="info-desc" id="deadDesc"></div>
+    </div>
+
+    <button class="btn-reset" onclick="s2reset()">↺ Start Over</button>
+
   </div>
+</div>
 
-  <div class="history" id="history"></div>
+<!-- ══════════════════════════════════════
+     STAGE 3 PANEL
+══════════════════════════════════════ -->
+<div class="panel" id="panel-s3">
+  <div class="container">
 
-  <!-- Question / Next card -->
-  <div class="question-card" id="questionCard">
-    <div class="question-text" id="questionText"></div>
-    <div class="btn-row" id="btnRow"></div>
+    <div class="s3-header">
+      <h1>Slime Counter</h1>
+      <p>APQ Stage 3 — Platform Solver</p>
+    </div>
+
+    <p class="hint">Type slime counts as the bottom person moves <span>C → 6 → D → 9 → 5</span></p>
+
+    <div class="platform-row" id="topRow"></div>
+
+    <div class="section-divider">
+      <div class="divider-line"></div>
+      <div class="divider-label">bottom</div>
+      <div class="divider-line"></div>
+    </div>
+
+    <div class="platform-row" id="bottomRow"></div>
+
+    <div class="result-area" id="resultArea"></div>
+
+    <button class="btn-reset" style="margin-top:16px" onclick="s3reset()">↺ Reset</button>
+
   </div>
-
-  <!-- Terminal info card -->
-  <div class="info-card terminal hidden" id="terminalCard">
-    <div class="info-label">✓ Final Answer</div>
-    <div class="info-desc" id="terminalDesc"></div>
-  </div>
-
-  <!-- Dead end info card -->
-  <div class="info-card dead hidden" id="deadCard">
-    <div class="info-label">✕ Dead End</div>
-    <div class="info-desc" id="deadDesc"></div>
-  </div>
-
-  <!-- Always-visible reset -->
-  <button class="btn-reset" onclick="reset()">↺ Start Over</button>
 </div>
 
 <script>
+// ══════════════════════════════════════
+// TAB SWITCHING
+// ══════════════════════════════════════
+function switchTab(id, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  btn.classList.add('active');
+  if (id === 's3') {
+    setTimeout(() => document.getElementById(`inp-${BOTTOM_PLATS[0]}`)?.focus(), 80);
+  }
+}
+
+// ══════════════════════════════════════
+// STAGE 2 LOGIC
+// ══════════════════════════════════════
 const tree = {
   '5-0-0': { same: '4-1-0', diff: '3-1-1' },
   '4-1-0': { same: '3-2-0', diff: '3-0-2' },
@@ -392,16 +669,15 @@ const tree = {
 
 const stageNames = ['Stage 1','Stage 2','Stage 3','Stage 4','Stage 5','Stage 6','Stage 7'];
 
-let current = '5-0-0';
-let step = 0;
-let history = [];
+let s2current = '5-0-0';
+let s2step = 0;
+let s2history = [];
 
 function isTerminal(combo) {
   const n = tree[combo];
   return !n || (n.same === null && n.diff === null);
 }
 
-// Returns { next, choice } if exactly one path, else null
 function onlyPath(combo) {
   const n = tree[combo];
   if (!n) return null;
@@ -419,17 +695,17 @@ function animateBadge(combo, terminal) {
   badge.classList.add('animate-in');
 }
 
-function renderHistory() {
-  document.getElementById('history').innerHTML = history.map((h, i) => `
+function s2renderHistory() {
+  document.getElementById('history').innerHTML = s2history.map((h, i) => `
     <div class="history-item">
       <span class="history-combo">${h.combo}</span>
       <span class="history-tag ${h.choice}">${h.choice === 'same' ? 'S' : h.choice === 'diff' ? 'D' : '→'}</span>
-      ${i < history.length - 1 ? '<span class="history-arrow">›</span>' : ''}
+      ${i < s2history.length - 1 ? '<span class="history-arrow">›</span>' : ''}
     </div>`).join('');
 }
 
-function renderQuestionCard() {
-  const single = onlyPath(current);
+function s2renderQuestionCard() {
+  const single = onlyPath(s2current);
   const qText = document.getElementById('questionText');
   const btnRow = document.getElementById('btnRow');
   document.getElementById('questionCard').classList.remove('hidden');
@@ -437,15 +713,14 @@ function renderQuestionCard() {
   document.getElementById('deadCard').classList.add('hidden');
 
   if (single) {
-    qText.innerHTML = `Only one path leads forward from <strong>${current}</strong>.`;
+    qText.innerHTML = `Only one path leads forward from <strong>${s2current}</strong>.`;
     btnRow.className = 'btn-row single';
     btnRow.innerHTML = `
       <button class="btn btn-next" onclick="chooseNext()">
-        Next
-        <span class="btn-sub">→ ${single.next}</span>
+        Next<span class="btn-sub">→ ${single.next}</span>
       </button>`;
   } else {
-    qText.innerHTML = `Did <strong>${current}</strong> match the seal?`;
+    qText.innerHTML = `Did <strong>${s2current}</strong> match the seal?`;
     btnRow.className = 'btn-row';
     btnRow.innerHTML = `
       <button class="btn btn-same" onclick="choose('same')">Same<span class="btn-sub">It matched</span></button>
@@ -455,7 +730,7 @@ function renderQuestionCard() {
 
 function markDot(idx, cls) {
   const dot = document.getElementById(`dot-${idx}`);
-  if (dot) { dot.className = 'progress-dot ' + cls; }
+  if (dot) dot.className = 'progress-dot ' + cls;
 }
 
 function activateDot(idx) {
@@ -464,82 +739,264 @@ function activateDot(idx) {
 }
 
 function choose(choice) {
-  const next = tree[current][choice];
-  markDot(step, choice);
-  history.push({ combo: current, choice });
-  step++;
-
-  if (!next) {
-    showDeadEnd(choice);
-    return;
-  }
-  advance(next);
+  const next = tree[s2current][choice];
+  markDot(s2step, choice);
+  s2history.push({ combo: s2current, choice });
+  s2step++;
+  if (!next) { s2showDeadEnd(choice); return; }
+  s2advance(next);
 }
 
 function chooseNext() {
-  const single = onlyPath(current);
+  const single = onlyPath(s2current);
   if (!single) return;
-  markDot(step, 'next');
-  history.push({ combo: current, choice: 'next' });
-  step++;
-  advance(single.next);
+  markDot(s2step, 'next');
+  s2history.push({ combo: s2current, choice: 'next' });
+  s2step++;
+  s2advance(single.next);
 }
 
-function advance(next) {
-  current = next;
-  activateDot(step);
-  renderHistory();
-
-  if (isTerminal(current)) {
-    showTerminal();
-    return;
-  }
-
-  animateBadge(current, false);
+function s2advance(next) {
+  s2current = next;
+  activateDot(s2step);
+  s2renderHistory();
+  if (isTerminal(s2current)) { s2showTerminal(); return; }
+  animateBadge(s2current, false);
   document.getElementById('stageLabel').textContent =
-    `${stageNames[step] || 'Stage ' + (step + 1)} — Try this combination`;
-  renderQuestionCard();
+    `${stageNames[s2step] || 'Stage ' + (s2step + 1)} — Try this combination`;
+  s2renderQuestionCard();
 }
 
-function showTerminal() {
-  animateBadge(current, true);
+function s2showTerminal() {
+  animateBadge(s2current, true);
   document.getElementById('stageLabel').textContent = 'Final Answer';
   document.getElementById('questionCard').classList.add('hidden');
   document.getElementById('terminalCard').classList.remove('hidden');
   document.getElementById('deadCard').classList.add('hidden');
   document.getElementById('terminalDesc').textContent =
-    `Your final combination is ${current}. Enter this into the sealed room.`;
+    `Your final combination is ${s2current}. Enter this into the sealed room.`;
 }
 
-function showDeadEnd(choice) {
+function s2showDeadEnd(choice) {
   document.getElementById('questionCard').classList.add('hidden');
   document.getElementById('terminalCard').classList.add('hidden');
   document.getElementById('deadCard').classList.remove('hidden');
   document.getElementById('deadDesc').textContent =
-    `No path exists from ${current} going "${choice}". This route isn't in the guide — try retracing your steps.`;
-  renderHistory();
+    `No path exists from ${s2current} going "${choice}". This route isn't in the guide — try retracing your steps.`;
+  s2renderHistory();
 }
 
-function reset() {
-  current = '5-0-0';
-  step = 0;
-  history = [];
-
+function s2reset() {
+  s2current = '5-0-0';
+  s2step = 0;
+  s2history = [];
   for (let i = 0; i < 7; i++) {
     const dot = document.getElementById(`dot-${i}`);
     if (dot) { dot.className = 'progress-dot'; if (i === 0) dot.classList.add('active'); }
   }
-
   document.getElementById('stageLabel').textContent = 'Stage 1 — Try this combination';
   document.getElementById('history').innerHTML = '';
   document.getElementById('terminalCard').classList.add('hidden');
   document.getElementById('deadCard').classList.add('hidden');
   animateBadge('5-0-0', false);
-  renderQuestionCard();
+  s2renderQuestionCard();
 }
 
-// Init
-renderQuestionCard();
+// Init Stage 2
+s2renderQuestionCard();
+
+
+// ══════════════════════════════════════
+// STAGE 3 LOGIC
+// ══════════════════════════════════════
+const TOP_PLATS    = ['A', '2', 'B', '3'];
+const BOTTOM_PLATS = ['C', '6', 'D', '9', '5'];
+
+const PATTERNS = [
+  { name: 'all-top',  label: '44445', topCorrect: 4 },
+  { name: '3-top',    label: '44333', topCorrect: 3 },
+  { name: '2-top',    label: '33322', topCorrect: 2 },
+  { name: '1-top',    label: '22221', topCorrect: 1 },
+  { name: 'all-bot',  label: '11111', topCorrect: 0 },
+];
+
+function solve(entered) {
+  if (entered.length === 0) return null;
+  const n = entered.length;
+
+  const candidates = PATTERNS.filter(p => {
+    const T = p.topCorrect;
+    for (let i = 0; i < n; i++) {
+      const v = entered[i];
+      if (v !== T && v !== T + 1) return false;
+    }
+    return true;
+  });
+
+  if (candidates.length === 0) return { error: true };
+  if (candidates.length === 1) return buildResult(candidates[0], entered);
+  return { partial: true, candidates, entered };
+}
+
+function buildResult(pattern, entered) {
+  const T = pattern.topCorrect;
+  const correctBottom = [];
+  for (let i = 0; i < entered.length; i++) {
+    if (entered[i] === T + 1) correctBottom.push(BOTTOM_PLATS[i]);
+  }
+  const unknown = BOTTOM_PLATS.slice(entered.length);
+  const totalBottomCorrect = pattern.label.split('').filter(c => parseInt(c) === T + 1).length;
+  const remainingCorrect = totalBottomCorrect - correctBottom.length;
+
+  let deducedBottom = [...correctBottom];
+  if (unknown.length === 1 && remainingCorrect === 1) deducedBottom.push(unknown[0]);
+
+  const complete = entered.length === 5 ||
+    (unknown.length === 1 && (remainingCorrect === 1 || remainingCorrect === 0));
+
+  return {
+    pattern,
+    correctBottom: deducedBottom,
+    topCombos: getTopCombos(T),
+    T,
+    totalBottomCorrect,
+    complete,
+    earlyDeduced: entered.length < 5 && complete,
+  };
+}
+
+function getTopCombos(T) {
+  const tops = TOP_PLATS;
+  if (T === 4) return [tops.join(' ')];
+  if (T === 3) return tops.map((_, i) => tops.filter((__, j) => j !== i).join(' '));
+  if (T === 2) {
+    const c = [];
+    for (let i = 0; i < tops.length; i++)
+      for (let j = i+1; j < tops.length; j++)
+        c.push(tops[i] + ' ' + tops[j]);
+    return c;
+  }
+  if (T === 1) return tops.map(t => t);
+  if (T === 0) return ['none — all bottom correct'];
+  return [];
+}
+
+function s3renderPlatforms() {
+  document.getElementById('topRow').innerHTML = TOP_PLATS.map(name => `
+    <div class="plat" id="top-${name}">
+      <div class="plat-name">${name}</div>
+      <div class="plat-box"></div>
+    </div>`).join('');
+
+  document.getElementById('bottomRow').innerHTML = BOTTOM_PLATS.map((name, i) => `
+    <div class="plat" id="bot-${name}">
+      <div class="plat-name">${name}</div>
+      <div class="plat-box" id="box-${name}">
+        <input class="plat-input" id="inp-${name}" type="text" inputmode="numeric"
+          maxlength="1" placeholder="·" data-idx="${i}"
+          oninput="s3onInput(this)" onkeydown="s3onKey(event,this)"
+          onfocus="this.parentElement.classList.add('input-active')"
+          onblur="this.parentElement.classList.remove('input-active')"
+        />
+      </div>
+    </div>`).join('');
+}
+
+function s3onInput(el) {
+  el.value = el.value.replace(/[^1-5]/g, '');
+  if (el.value.length === 1) {
+    const idx = parseInt(el.dataset.idx);
+    if (idx < BOTTOM_PLATS.length - 1)
+      document.getElementById(`inp-${BOTTOM_PLATS[idx + 1]}`)?.focus();
+    else el.blur();
+  }
+  s3update();
+}
+
+function s3onKey(e, el) {
+  const idx = parseInt(el.dataset.idx);
+  if (e.key === 'Backspace' && el.value === '' && idx > 0) {
+    const prev = document.getElementById(`inp-${BOTTOM_PLATS[idx - 1]}`);
+    if (prev) { prev.value = ''; prev.focus(); }
+    s3update();
+  }
+}
+
+function s3getEntered() {
+  return BOTTOM_PLATS.map(name => {
+    const v = document.getElementById(`inp-${name}`)?.value;
+    return v && /^[1-5]$/.test(v) ? parseInt(v) : null;
+  });
+}
+
+function s3clearHighlights() {
+  [...TOP_PLATS, ...BOTTOM_PLATS].forEach(name => {
+    document.getElementById(`top-${name}`)?.classList.remove('highlighted');
+    document.getElementById(`bot-${name}`)?.classList.remove('highlighted');
+  });
+}
+
+function s3update() {
+  const all = s3getEntered();
+  const entered = [];
+  for (const v of all) { if (v === null) break; entered.push(v); }
+
+  s3clearHighlights();
+  const ra = document.getElementById('resultArea');
+
+  if (entered.length === 0) { ra.innerHTML = ''; return; }
+
+  const result = solve(entered);
+  if (!result) { ra.innerHTML = ''; return; }
+
+  if (result.error) {
+    ra.innerHTML = `<div class="result-card" style="border-color:rgba(248,113,113,0.3)">
+      <div class="result-title" style="color:var(--red)">⚠ Invalid Input</div>
+      <div class="result-detail">These counts don't match any known pattern. Check for a miscount.</div>
+    </div>`;
+    return;
+  }
+
+  if (result.partial) {
+    const names = result.candidates.map(c => `<span class="combo-chip">${c.label}</span>`).join('');
+    ra.innerHTML = `<div class="result-card partial">
+      <div class="result-title">Still narrowing down…</div>
+      <div class="result-detail">Possible patterns: <strong>${result.candidates.map(c=>c.label).join(', ')}</strong>. Keep entering counts.</div>
+      <div class="top-combos">${names}</div>
+    </div>`;
+    return;
+  }
+
+  const { correctBottom, topCombos, T, earlyDeduced } = result;
+  correctBottom.forEach(name => document.getElementById(`bot-${name}`)?.classList.add('highlighted'));
+  const comboHTML = topCombos.map(c => `<span class="combo-chip">${c}</span>`).join('');
+
+  ra.innerHTML = `<div class="result-card success">
+    <div class="result-title">✓ Solution Found${earlyDeduced ? ' — Early Solve' : ''}</div>
+    <div class="result-move">Move to: <span class="green">${correctBottom.length > 0 ? correctBottom.join('') : '—'}</span></div>
+    <div class="result-detail">
+      Pattern: <strong>${result.pattern.label}</strong> — <strong>${T} top</strong> platform${T !== 1 ? 's' : ''} correct,
+      <strong>${correctBottom.length}</strong> bottom platform${correctBottom.length !== 1 ? 's' : ''} correct
+      (${correctBottom.length > 0 ? correctBottom.join(', ') : 'none'}).
+      <br><br>
+      Lock in <strong>${correctBottom.length > 0 ? correctBottom.join(', ') : 'no bottom platforms'}</strong>, then try these top combos:
+    </div>
+    <div class="top-combos">${comboHTML}</div>
+  </div>`;
+}
+
+function s3reset() {
+  BOTTOM_PLATS.forEach(name => {
+    const inp = document.getElementById(`inp-${name}`);
+    if (inp) inp.value = '';
+  });
+  s3clearHighlights();
+  document.getElementById('resultArea').innerHTML = '';
+  document.getElementById(`inp-${BOTTOM_PLATS[0]}`)?.focus();
+}
+
+// Init Stage 3
+s3renderPlatforms();
 </script>
 </body>
 </html>
