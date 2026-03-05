@@ -473,7 +473,23 @@
     border-radius: 4px;
     image-rendering: pixelated;
     pointer-events: none;
-    opacity: 0.85;
+    opacity: 0.5;
+  }
+
+  .plat-box.awaiting-input {
+    border-color: var(--accent-stage);
+    box-shadow: 0 0 0 0 rgba(96, 165, 250, 0.5);
+    animation: pulseGlow 1.6s ease-in-out infinite;
+  }
+
+  .plat-box.awaiting-input .plat-input::placeholder {
+    color: rgba(96, 165, 250, 0.6);
+  }
+
+  @keyframes pulseGlow {
+    0%   { box-shadow: 0 0 0 0 rgba(96, 165, 250, 0.45); }
+    50%  { box-shadow: 0 0 10px 4px rgba(96, 165, 250, 0.2); }
+    100% { box-shadow: 0 0 0 0 rgba(96, 165, 250, 0.45); }
   }
 
   .plat-box {
@@ -1097,7 +1113,7 @@ function switchTab(id, btn) {
   // Update URL hash without triggering a scroll
   history.replaceState(null, '', '#' + (TAB_SLUG[id] || id));
   if (id === 's3') {
-    setTimeout(() => document.getElementById(`inp-${BOTTOM_PLATS[0]}`)?.focus(), 80);
+    setTimeout(() => s3updatePeacemaker(), 80);
   }
 }
 
@@ -1427,16 +1443,21 @@ function s3renderPlatforms() {
 }
 
 function s3updatePeacemaker() {
-  // Find the first empty input — peacemaker sits on that platform
-  // If all filled, hide entirely
   const firstEmpty = BOTTOM_PLATS.findIndex(name => {
     const v = document.getElementById(`inp-${name}`)?.value;
     return !v || v === '';
   });
   BOTTOM_PLATS.forEach((name, i) => {
     const pm = document.getElementById(`pm-${name}`);
-    if (pm) pm.style.display = (i === firstEmpty) ? 'block' : 'none';
+    const box = document.getElementById(`box-${name}`);
+    const isActive = (i === firstEmpty);
+    if (pm) pm.style.display = isActive ? 'block' : 'none';
+    if (box) box.classList.toggle('awaiting-input', isActive);
   });
+  // Focus the active input so the cursor is ready
+  if (firstEmpty >= 0) {
+    document.getElementById(`inp-${BOTTOM_PLATS[firstEmpty]}`)?.focus();
+  }
 }
 
 function s3onInput(el) {
@@ -1559,11 +1580,11 @@ function s3reset() {
   s3clearHighlights();
   s3updatePeacemaker();
   document.getElementById('resultArea').innerHTML = '';
-  document.getElementById(`inp-${BOTTOM_PLATS[0]}`)?.focus();
 }
 
 // Init Stage 3
 s3renderPlatforms();
+s3updatePeacemaker();
 
 // Route to correct tab based on URL hash
 loadTabFromHash();
