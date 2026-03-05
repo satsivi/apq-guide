@@ -440,6 +440,28 @@
     box-shadow: 0 0 16px rgba(74, 222, 128, 0.12);
   }
 
+  .plat-box.top-occupied {
+    border-color: #3a4060;
+    background: #1a1f30;
+  }
+
+  .top-x {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #3a4565;
+    user-select: none;
+  }
+
+  .plat.highlighted .plat-box.top-occupied {
+    border-color: var(--green-border);
+    background: var(--green-bg);
+  }
+
+  .plat.highlighted .top-x {
+    color: var(--green);
+  }
+
   .plat-input {
     width: 100%;
     height: 100%;
@@ -812,24 +834,50 @@ s2renderQuestionCard();
 const TOP_PLATS    = ['A', '2', 'B', '3'];
 const BOTTOM_PLATS = ['C', '6', 'D', '9', '5'];
 
+// bottomCorrect = how many bottom platforms give count T+1 (derived from label)
+// 44445: one 5 among four 4s → 1 correct bottom
+// 44333: two 4s among three 3s → 2 correct bottoms
+// 33322: three 3s among two 2s → 3 correct bottoms
+// 22221: four 2s and one 1     → 4 correct bottoms
+// 11111: five 1s               → 5 correct bottoms (all)
 const PATTERNS = [
-  { name: 'all-top',  label: '44445', topCorrect: 4 },
-  { name: '3-top',    label: '44333', topCorrect: 3 },
-  { name: '2-top',    label: '33322', topCorrect: 2 },
-  { name: '1-top',    label: '22221', topCorrect: 1 },
-  { name: 'all-bot',  label: '11111', topCorrect: 0 },
+  { name: 'all-top',  label: '44445', topCorrect: 4, bottomCorrect: 1 },
+  { name: '3-top',    label: '44333', topCorrect: 3, bottomCorrect: 2 },
+  { name: '2-top',    label: '33322', topCorrect: 2, bottomCorrect: 3 },
+  { name: '1-top',    label: '22221', topCorrect: 1, bottomCorrect: 4 },
+  { name: 'all-bot',  label: '11111', topCorrect: 0, bottomCorrect: 5 },
 ];
 
 function solve(entered) {
   if (entered.length === 0) return null;
   const n = entered.length;
 
+  // If any entered value is 5, it must be 44445 (only pattern with a 5).
+  // That's an instant stage clear — A2B3C is the answer.
+  if (entered.includes(5)) {
+    // Validate: all other values must be 4
+    const invalid = entered.some(v => v !== 4 && v !== 5);
+    if (invalid) return { error: true };
+    return buildResult(PATTERNS.find(p => p.name === 'all-top'), entered);
+  }
+
+  // All patterns are multisets — order doesn't matter.
+  // For each pattern, check that the counts of T and T+1 values seen so far
+  // don't exceed what the pattern allows.
   const candidates = PATTERNS.filter(p => {
+    if (p.name === 'all-top') return false; // handled above (needs a 5)
     const T = p.topCorrect;
+    let highCount = 0, lowCount = 0;
     for (let i = 0; i < n; i++) {
       const v = entered[i];
       if (v !== T && v !== T + 1) return false;
+      if (v === T + 1) highCount++;
+      else lowCount++;
     }
+    const maxWrong = 5 - p.bottomCorrect;
+    if (lowCount > maxWrong) return false;
+    if (highCount > p.bottomCorrect) return false;
+    if (n === 5 && highCount !== p.bottomCorrect) return false;
     return true;
   });
 
@@ -840,28 +888,45 @@ function solve(entered) {
 
 function buildResult(pattern, entered) {
   const T = pattern.topCorrect;
+  const n = entered.length;
+
+  // 44445: any 5 seen = instant pass. Starting position A2B3C is the answer.
+  if (pattern.name === 'all-top') {
+    return {
+      pattern, correctBottom: [], topCombos: [], T,
+      complete: true, earlyDeduced: n < 5,
+      instantPass: true,
+    };
+  }
+
+  // 11111: all bottom correct — answer is C6D95, brute force top separately
+  if (pattern.name === 'all-bot') {
+    return {
+      pattern, correctBottom: [...BOTTOM_PLATS], topCombos: [], T,
+      complete: true, earlyDeduced: n < 5,
+      allBot: true,
+    };
+  }
+
+  // General: counts are a multiset of T (wrong) and T+1 (correct).
+  // Since order doesn't matter, we identify correct bottoms by which
+  // positions gave T+1. We know exactly bottomCorrect of them are correct.
   const correctBottom = [];
-  for (let i = 0; i < entered.length; i++) {
+  for (let i = 0; i < n; i++) {
     if (entered[i] === T + 1) correctBottom.push(BOTTOM_PLATS[i]);
   }
-  const unknown = BOTTOM_PLATS.slice(entered.length);
-  const totalBottomCorrect = pattern.label.split('').filter(c => parseInt(c) === T + 1).length;
-  const remainingCorrect = totalBottomCorrect - correctBottom.length;
-
+  const remainingCorrect = pattern.bottomCorrect - correctBottom.length;
+  const unknown = BOTTOM_PLATS.slice(n);
   let deducedBottom = [...correctBottom];
+  // If one slot left and we know exactly how many correct remain, deduce it
   if (unknown.length === 1 && remainingCorrect === 1) deducedBottom.push(unknown[0]);
 
-  const complete = entered.length === 5 ||
+  const complete = n === 5 ||
     (unknown.length === 1 && (remainingCorrect === 1 || remainingCorrect === 0));
 
   return {
-    pattern,
-    correctBottom: deducedBottom,
-    topCombos: getTopCombos(T),
-    T,
-    totalBottomCorrect,
-    complete,
-    earlyDeduced: entered.length < 5 && complete,
+    pattern, correctBottom: deducedBottom, topCombos: getTopCombos(T), T,
+    complete, earlyDeduced: n < 5 && complete,
   };
 }
 
@@ -877,7 +942,6 @@ function getTopCombos(T) {
     return c;
   }
   if (T === 1) return tops.map(t => t);
-  if (T === 0) return ['none — all bottom correct'];
   return [];
 }
 
@@ -885,7 +949,7 @@ function s3renderPlatforms() {
   document.getElementById('topRow').innerHTML = TOP_PLATS.map(name => `
     <div class="plat" id="top-${name}">
       <div class="plat-name">${name}</div>
-      <div class="plat-box"></div>
+      <div class="plat-box top-occupied"><span class="top-x">✕</span></div>
     </div>`).join('');
 
   document.getElementById('bottomRow').innerHTML = BOTTOM_PLATS.map((name, i) => `
@@ -967,8 +1031,35 @@ function s3update() {
     return;
   }
 
-  const { correctBottom, topCombos, T, earlyDeduced } = result;
+  const { correctBottom, topCombos, T, earlyDeduced, allBot, instantPass } = result;
   correctBottom.forEach(name => document.getElementById(`bot-${name}`)?.classList.add('highlighted'));
+
+  // Highlight top platforms when they should all stay (T=4 or T>0 in general we show combos)
+  // For all-bot, no top platforms needed — don't highlight any
+  if (allBot) {
+    ra.innerHTML = `<div class="result-card success">
+      <div class="result-title">✓ All Bottom Correct${earlyDeduced ? ' — Early Solve' : ''}</div>
+      <div class="result-move">Move to: <span class="green">C 6 D 9 5</span></div>
+      <div class="result-detail">
+        Pattern: <strong>11111</strong> — all bottom platforms are correct. No top platform changes needed. Stage clear!
+      </div>
+    </div>`;
+    return;
+  }
+
+  if (instantPass) {
+    TOP_PLATS.forEach(name => document.getElementById(`top-${name}`)?.classList.add('highlighted'));
+    BOTTOM_PLATS.slice(0,1).forEach(name => document.getElementById(`bot-${name}`)?.classList.add('highlighted')); // C
+    ra.innerHTML = `<div class="result-card success">
+      <div class="result-title">✓ Instant Pass${earlyDeduced ? ' — Early Solve' : ''}</div>
+      <div class="result-move">Answer: <span class="green">A 2 B 3 C</span></div>
+      <div class="result-detail">
+        Pattern: <strong>44445</strong> — all 4 top platforms are correct and you're already on the starting position. The stage clears as soon as the bottom person stands on any platform (you see a 5). No moves needed!
+      </div>
+    </div>`;
+    return;
+  }
+
   const comboHTML = topCombos.map(c => `<span class="combo-chip">${c}</span>`).join('');
 
   ra.innerHTML = `<div class="result-card success">
